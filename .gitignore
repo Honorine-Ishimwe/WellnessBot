@@ -1,3 +1,16 @@
+# Python
 venv/
-.DS_Store
+__pycache__/
+*.pyc
+
+# Node
 node_modules/
+
+# Environment
+.env
+
+# OS
+.DS_Store
+
+# Build
+frontend/build/

@@ -1,0 +1,297 @@
+/* ── ChatBox ──────────────────────────────────────────── */
+
+.chatbox-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 24px;
+}
+
+.chatbox {
+  width: 420px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 8px 32px rgba(99, 130, 190, 0.18),
+    0 1.5px 6px rgba(99, 130, 190, 0.08);
+  border: 1px solid rgba(200, 215, 240, 0.5);
+}
+
+/* ── Header ─────────────────────────────────────────── */
+
+.chatbox-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #4f8ef7 0%, #7b68ee 100%);
+  color: #fff;
+}
+
+.chatbox-header-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #5efc82;
+  box-shadow: 0 0 6px rgba(94, 252, 130, 0.6);
+  flex-shrink: 0;
+}
+
+.chatbox-header-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.3px;
+}
+
+.chatbox-header-mood {
+  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 3px 10px;
+  border-radius: 12px;
+  backdrop-filter: blur(4px);
+}
+
+.chatbox-header-status {
+  margin-left: auto;
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
+/* ── Messages area ──────────────────────────────────── */
+
+.chatbox-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 320px;
+  max-height: 50vh;
+}
+
+.chatbox-messages::-webkit-scrollbar {
+  width: 5px;
+}
+.chatbox-messages::-webkit-scrollbar-thumb {
+  background: rgba(120, 140, 190, 0.3);
+  border-radius: 10px;
+}
+
+/* ── Message row ────────────────────────────────────── */
+
+.chatbox-msg {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  animation: msgFadeIn 0.3s ease-out;
+}
+
+.chatbox-msg--user {
+  flex-direction: row-reverse;
+}
+
+.chatbox-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e8f0fe, #d0dffe);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* ── Bubble ─────────────────────────────────────────── */
+
+.chatbox-bubble {
+  max-width: 75%;
+  padding: 10px 16px;
+  border-radius: 18px;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.chatbox-bubble--bot {
+  background: #f0f4ff;
+  color: #2c3e6b;
+  border-bottom-left-radius: 4px;
+}
+
+.chatbox-bubble--user {
+  background: linear-gradient(135deg, #4f8ef7, #7b68ee);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+/* ── Mood picker ────────────────────────────────────── */
+
+.chatbox-mood-picker {
+  padding: 8px 0 4px;
+  animation: msgFadeIn 0.4s ease-out;
+}
+
+.chatbox-mood-label {
+  font-size: 0.82rem;
+  color: #7a8aaa;
+  margin: 0 0 10px 40px;
+  font-weight: 500;
+}
+
+.chatbox-mood-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-left: 40px;
+}
+
+.chatbox-mood-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(180, 200, 240, 0.6);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.82rem;
+  color: #3a4d6e;
+  transition: all 0.2s ease;
+}
+
+.chatbox-mood-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e8f0fe, #dce6ff);
+  border-color: #4f8ef7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 142, 247, 0.15);
+}
+
+.chatbox-mood-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.chatbox-mood-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.chatbox-mood-emoji {
+  font-size: 1.1rem;
+}
+
+.chatbox-mood-text {
+  font-weight: 500;
+}
+
+/* ── Typing indicator ───────────────────────────────── */
+
+.chatbox-typing {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 18px;
+}
+
+.chatbox-typing .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #a0b4e0;
+  animation: bounce 1.4s ease-in-out infinite;
+}
+.chatbox-typing .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.chatbox-typing .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30%           { transform: translateY(-6px); }
+}
+
+@keyframes msgFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Disclaimer ─────────────────────────────────────── */
+
+.chatbox-disclaimer {
+  padding: 8px 16px;
+  font-size: 0.72rem;
+  color: #8a96ab;
+  text-align: center;
+  background: rgba(255, 245, 230, 0.6);
+  border-top: 1px solid rgba(220, 200, 160, 0.3);
+  line-height: 1.4;
+}
+
+/* ── Input bar ──────────────────────────────────────── */
+
+.chatbox-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(200, 215, 240, 0.5);
+  background: rgba(248, 250, 255, 0.6);
+}
+
+.chatbox-input input {
+  flex: 1;
+  border: 1px solid rgba(180, 200, 240, 0.5);
+  border-radius: 24px;
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.chatbox-input input:focus {
+  border-color: #4f8ef7;
+  box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.15);
+}
+
+.chatbox-input input::placeholder {
+  color: #a0b0cc;
+}
+
+.chatbox-input button {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #4f8ef7, #7b68ee);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.15s, opacity 0.2s;
+}
+
+.chatbox-input button:hover:not(:disabled) {
+  transform: scale(1.08);
+}
+
+.chatbox-input button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

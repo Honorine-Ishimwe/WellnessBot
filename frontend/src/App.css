@@ -1,38 +1,109 @@
-.App {
-  text-align: center;
+:root {
+  --bg1: #f0f4ff;
+  --bg2: #e4edff;
+  --bubbleA: #c4dbff;
+  --bubbleB: #b3ccff;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+html, body, #root, .app-root {
+  height: 100%;
 }
 
-.App-header {
-  background-color: #282c34;
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Root container ─────────────────────────────────── */
+
+.app-root {
+  position: relative;
   min-height: 100vh;
+  background:
+    radial-gradient(1200px 600px at 20% 30%, var(--bg2), transparent 60%),
+    radial-gradient(900px 500px at 80% 70%, var(--bg2), transparent 55%),
+    linear-gradient(180deg, var(--bg1), #ffffff);
+  overflow: hidden;
+}
+
+/* ── Page layout ────────────────────────────────────── */
+
+.page {
+  position: relative;
+  z-index: 1;
   display: flex;
-  flex-direction: column;
+  height: 100vh;
+}
+
+.left,
+.right {
+  flex: 1;
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.left {
+  background: rgba(245, 248, 255, 0.5);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* ── Floating bubbles ───────────────────────────────── */
+
+.bubbles {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bubble {
+  position: absolute;
+  bottom: -40px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff, var(--bubbleA));
+  box-shadow:
+    0 8px 24px rgba(88, 136, 255, 0.2),
+    inset 0 2px 6px rgba(255, 255, 255, 0.8);
+  filter: blur(0.2px);
+  animation: rise linear infinite;
+  opacity: 0;
+}
+
+.bubble:nth-child(odd)  { width: 18px; height: 18px; }
+.bubble:nth-child(3n)   { width: 32px; height: 32px; }
+.bubble:nth-child(5n)   { width: 26px; height: 26px; background: radial-gradient(circle at 30% 30%, #fff, var(--bubbleB)); }
+.bubble:nth-child(even) { width: 20px; height: 20px; }
+
+@keyframes rise {
+  0%   { transform: translateY(0) translateX(0) scale(1);    opacity: 0; }
+  10%  { opacity: 0.7; }
+  90%  { opacity: 0.5; }
+  100% { transform: translateY(-110vh) translateX(-30px) scale(1.15); opacity: 0; }
+}
+
+/* ── Responsive ─────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .page {
+    flex-direction: column;
   }
-  to {
-    transform: rotate(360deg);
+
+  .left {
+    flex: 0 0 auto;
+    padding: 24px 16px;
+  }
+
+  .right {
+    flex: 1;
   }
 }
