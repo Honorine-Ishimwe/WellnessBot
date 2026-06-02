@@ -7,7 +7,12 @@ from openai import OpenAI
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+
+# Allow CORS from configured origins (comma-separated in env) or all in dev
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "*")
+if allowed_origins != "*":
+    allowed_origins = [o.strip() for o in allowed_origins.split(",")]
+CORS(app, origins=allowed_origins)
 
 # ── OpenAI client (reads OPENAI_API_KEY from env automatically) ──
 client = OpenAI()
