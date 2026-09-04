@@ -2,3 +2,9 @@ flask
 flask-cors
 openai
 python-dotenv
+psycopg2-binary
+PyJWT
+google-auth
+requests
+flask-limiter
+gunicorn

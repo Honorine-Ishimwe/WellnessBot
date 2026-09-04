@@ -94,3 +94,23 @@
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-10px); }
 }
+
+/* ── Dark Mode ─────────────────────────────────────── */
+
+.dark .welcome-subtitle {
+  color: #8a9bc0;
+}
+
+.dark .welcome-feature {
+  background: rgba(40, 50, 75, 0.6);
+  border-color: rgba(80, 100, 140, 0.3);
+  color: #c5d0e8;
+}
+
+.dark .welcome-feature:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.dark .welcome-disclaimer {
+  color: #6b7a9a;
+}

@@ -1,0 +1,38 @@
+# Render Blueprint — WellnessBot Backend
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: wellnessbot-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn backend:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: PYTHON_VERSION
+        value: "3.11"
+    healthCheckPath: /health
+
+  # Daily cleanup cron job — deletes conversations older than 30 days
+  - type: cron
+    name: wellnessbot-cleanup
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    schedule: "0 3 * * *"
+    startCommand: python cleanup_job.py
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: RETENTION_DAYS
+        value: "30"

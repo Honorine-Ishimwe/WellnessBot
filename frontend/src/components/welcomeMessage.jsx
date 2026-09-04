@@ -5,7 +5,6 @@ export default function WelcomeMessage() {
   return (
     <div className="welcome">
       <div className="welcome-content">
-        <div className="welcome-icon">🧘</div>
         <h1 className="welcome-title">WellnessBot</h1>
         <p className="welcome-subtitle">
           Your safe space for emotional support
@@ -13,15 +12,12 @@ export default function WelcomeMessage() {
 
         <div className="welcome-features">
           <div className="welcome-feature">
-            <span className="welcome-feature-icon">💬</span>
             <span>Talk about how you feel</span>
           </div>
           <div className="welcome-feature">
-            <span className="welcome-feature-icon">🌱</span>
             <span>Get coping strategies</span>
           </div>
           <div className="welcome-feature">
-            <span className="welcome-feature-icon">🔒</span>
             <span>Private &amp; judgement-free</span>
           </div>
         </div>
