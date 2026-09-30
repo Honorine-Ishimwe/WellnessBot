@@ -8,3 +8,5 @@ google-auth
 requests
 flask-limiter
 gunicorn
+faiss-cpu
+numpy

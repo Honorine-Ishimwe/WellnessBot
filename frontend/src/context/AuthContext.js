@@ -1,13 +1,15 @@
 /**
- * AuthContext — provides authentication state and API helpers to the app.
+ * AuthContext — provides authentication state to the app.
+ * API calls are delegated to api/auth.js.
  * Stores JWT in localStorage and wraps Google OAuth flow.
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { googleLogin as apiGoogleLogin } from "../api/auth";
+import { apiFetch } from "../api/client";
 
 const AuthContext = createContext(null);
 
-const API_URL = process.env.REACT_APP_API_URL || "http://127.0.0.1:5001";
 const TOKEN_KEY = "wellnessbot_token";
 const USER_KEY = "wellnessbot_user";
 
@@ -45,24 +47,7 @@ export function AuthProvider({ children }) {
   const loginWithGoogle = useCallback(async (credential) => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/auth/google`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ credential }),
-      });
-
-      if (!res.ok) {
-        let errMessage = "Login failed";
-        try {
-          const data = await res.json();
-          errMessage = data.error || errMessage;
-        } catch {
-          // ignore
-        }
-        throw new Error(errMessage);
-      }
-
-      const data = await res.json();
+      const data = await apiGoogleLogin(credential);
       setToken(data.token);
       setUser(data.user);
       return data;
@@ -90,19 +75,7 @@ export function AuthProvider({ children }) {
    * Automatically attaches the JWT and handles 401s.
    */
   const authFetch = useCallback(async (path, options = {}) => {
-    const headers = {
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    };
-
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
-    }
-
-    const res = await fetch(`${API_URL}${path}`, {
-      ...options,
-      headers,
-    });
+    const res = await apiFetch(path, options);
 
     // If token is expired, log out
     if (res.status === 401) {
@@ -111,7 +84,7 @@ export function AuthProvider({ children }) {
     }
 
     return res;
-  }, [token]);
+  }, []);
 
   const value = {
     token,

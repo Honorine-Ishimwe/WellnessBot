@@ -1,10 +1,12 @@
 /**
  * ConversationList — Sidebar showing past conversations.
- * Loads from /conversations API, supports loading and deleting conversations.
+ * Uses useConversations hook for data management.
+ * Component handles only UI rendering.
  */
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../context/AuthContext";
+import useConversations from "../hooks/useConversations";
 import "./conversationList.css";
 
 export default function ConversationList({
@@ -12,56 +14,37 @@ export default function ConversationList({
   onSelectConversation,
   onNewChat,
 }) {
-  const { authFetch, user, logout } = useAuth();
-  const [conversations, setConversations] = useState([]);
+  const { user, logout } = useAuth();
+  const {
+    conversations,
+    loadConversations,
+    selectConversation,
+    removeConversation,
+  } = useConversations();
   const [isOpen, setIsOpen] = useState(false);
-
-  const loadConversations = useCallback(async () => {
-    try {
-      const res = await authFetch("/conversations");
-      if (res.ok) {
-        const data = await res.json();
-        setConversations(data.conversations || []);
-      }
-    } catch (err) {
-      console.error("Failed to load conversations:", err);
-    }
-  }, [authFetch]);
 
   // Load on mount and when conversation changes
   useEffect(() => {
     loadConversations();
   }, [loadConversations, currentConversationId]);
 
-  const handleDelete = async (e, convId) => {
+  const handleDelete = useCallback(async (e, convId) => {
     e.stopPropagation();
     if (!window.confirm("Delete this conversation?")) return;
 
-    try {
-      const res = await authFetch(`/conversations/${convId}`, { method: "DELETE" });
-      if (res.ok) {
-        setConversations((prev) => prev.filter((c) => c.id !== convId));
-        if (convId === currentConversationId) {
-          onNewChat();
-        }
-      }
-    } catch (err) {
-      console.error("Failed to delete conversation:", err);
+    const deleted = await removeConversation(convId);
+    if (deleted && convId === currentConversationId) {
+      onNewChat();
     }
-  };
+  }, [removeConversation, currentConversationId, onNewChat]);
 
-  const handleSelect = async (convId) => {
-    try {
-      const res = await authFetch(`/conversations/${convId}`);
-      if (res.ok) {
-        const data = await res.json();
-        onSelectConversation(data.conversation, data.messages);
-      }
-    } catch (err) {
-      console.error("Failed to load conversation:", err);
+  const handleSelect = useCallback(async (convId) => {
+    const data = await selectConversation(convId);
+    if (data) {
+      onSelectConversation(data.conversation, data.messages);
     }
     setIsOpen(false);
-  };
+  }, [selectConversation, onSelectConversation]);
 
   const formatDate = (isoString) => {
     const date = new Date(isoString);

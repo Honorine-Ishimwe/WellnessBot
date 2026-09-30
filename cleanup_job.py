@@ -4,29 +4,19 @@ Run as a Render Cron Job: python cleanup_job.py
 Schedule: 0 3 * * * (daily at 3 AM UTC)
 """
 
-import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-from db import query, execute, close_pool
-from logger import logger
-
-
-RETENTION_DAYS = int(os.getenv("RETENTION_DAYS", "30"))
+from backend.config import RETENTION_DAYS
+from backend.repositories import conversation_repo
+from backend.db import close_pool
+from backend.middleware.logging import logger
 
 
 def cleanup_old_conversations():
     """Delete conversations older than RETENTION_DAYS."""
-    result = query(
-        """
-        DELETE FROM conversations
-        WHERE updated_at < NOW() - INTERVAL '%s days'
-        RETURNING id
-        """,
-        (RETENTION_DAYS,),
-        fetchall=True,
-    )
+    result = conversation_repo.delete_older_than(RETENTION_DAYS)
 
     count = len(result) if result else 0
     logger.info(f"Cleanup complete: deleted {count} conversations older than {RETENTION_DAYS} days")
